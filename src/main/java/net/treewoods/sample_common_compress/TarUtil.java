@@ -15,11 +15,11 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 public class TarUtil {
 
 	//作成
-	public void archive(String[] inputFiles, String outputFile) throws FileNotFoundException, IOException {
+	public void archive(String baseDir, String[] inputFiles, String outputFile) throws FileNotFoundException, IOException {
 		try (TarArchiveOutputStream out = new TarArchiveOutputStream(new FileOutputStream(outputFile))) {
 			for (String inputFile : inputFiles) {
-				File f = new File(inputFile);
-				out.putArchiveEntry(new TarArchiveEntry(f, f.getName()));
+				File f = new File(baseDir + inputFile);
+				out.putArchiveEntry(new TarArchiveEntry(f, inputFile));
 				out.write(org.apache.commons.io.FileUtils.readFileToByteArray(f));
 				out.closeArchiveEntry();
 			}
@@ -33,7 +33,7 @@ public class TarUtil {
 			ArchiveEntry entry;
 			while ((entry = in.getNextEntry()) != null) {
 				File outFile = new File(outputDir + "/" + entry.getName());
-
+				
 				// ディレクトリならディレクトリ作成
 				if (entry.isDirectory()) {
 					outFile.mkdirs();

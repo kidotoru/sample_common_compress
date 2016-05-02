@@ -43,14 +43,15 @@ public class TarUtilTest {
 	@Test
 	public void testArchive() throws Exception {
 		System.out.println("archive");
-		String[] inputFiles = {"./in/file1","./in/file2"};
+		String baseDir = "./in/";
+		String[] inputFiles = {"file1","file2","dir/file3"};
 		String outputFile = "./out/test.tar";
 		TarUtil instance = new TarUtil();
-		instance.archive(inputFiles, outputFile);
+		instance.archive(baseDir,inputFiles, outputFile);
 	}
 
 	/**
-	 * Test of decompress method, of class TarUtil.
+	 * Test of extract method, of class TarUtil.
 	 */
 	@Test
 	public void testExtract() throws Exception {
