@@ -62,6 +62,19 @@ public class TarUtilTest {
 		instance.extract(inputFile, outputDir);
 	}
 
+	/**
+	 * Test of archive method, of class TarUtil.
+	 */
+	@Test
+	public void testArchive_String_String() throws Exception {
+		System.out.println("archive");
+		String baseDir = "./in/";
+		String outputFile = "./out/test.tar";
+		TarUtil instance = new TarUtil();
+		instance.archive(baseDir, outputFile);
+	}
+
+
 
 	
 }
