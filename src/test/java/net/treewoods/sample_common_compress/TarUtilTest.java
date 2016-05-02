@@ -37,15 +37,29 @@ public class TarUtilTest {
     public void tearDown() {
     }
 
+
+    /**
+     * Test of archive method, of class TarUtil.
+     */
+    @Test
+    public void testArchive_String_String() throws Exception {
+        System.out.println("archive");
+        String baseDir = "./in/01/";
+        String outputFile = "./out/01/test.tar";
+        TarUtil instance = new TarUtil();
+        instance.archive(baseDir, outputFile);
+    }
+
+
     /**
      * Test of archive method, of class TarUtil.
      */
     @Test
     public void testArchive() throws Exception {
         System.out.println("archive");
-        String baseDir = "./in/";
+        String baseDir = "./in/02/";
         String[] inputFiles = {"file1", "file2", "dir/file3"};
-        String outputFile = "./out/test.tar";
+        String outputFile = "./out/02/test.tar";
         TarUtil instance = new TarUtil();
         instance.archive(baseDir, inputFiles, outputFile);
     }
@@ -56,22 +70,10 @@ public class TarUtilTest {
     @Test
     public void testExtract() throws Exception {
         System.out.println("extract");
-        String inputFile = "./out/test.tar";
-        String outputDir = "./out";
+        String inputFile = "./in/03/test.tar";
+        String outputDir = "./out/03";
         TarUtil instance = new TarUtil();
         instance.extract(inputFile, outputDir);
-    }
-
-    /**
-     * Test of archive method, of class TarUtil.
-     */
-    @Test
-    public void testArchive_String_String() throws Exception {
-        System.out.println("archive");
-        String baseDir = "./in/";
-        String outputFile = "./out/test.tar";
-        TarUtil instance = new TarUtil();
-        instance.archive(baseDir, outputFile);
     }
 
 }

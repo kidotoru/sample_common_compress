@@ -13,6 +13,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 public class TarUtil {
 
@@ -44,10 +45,10 @@ public class TarUtil {
 
     //展開
     public void extract(String inputFile, String outputDir) throws FileNotFoundException, IOException {
-        try (TarArchiveInputStream in = new TarArchiveInputStream(new FileInputStream(inputFile))) {
-            BufferedInputStream bis = new BufferedInputStream(in);
+        try (TarArchiveInputStream is = new TarArchiveInputStream(new FileInputStream(inputFile));
+                BufferedInputStream bis = new BufferedInputStream(is)) {
             ArchiveEntry entry;
-            while ((entry = in.getNextEntry()) != null) {
+            while ((entry = is.getNextEntry()) != null) {
                 File outFile = new File(outputDir + "/" + entry.getName());
 
                 // ディレクトリならディレクトリ作成
@@ -61,14 +62,10 @@ public class TarUtil {
                     outFile.getParentFile().mkdirs();
                 }
 
-                //FileUtils.copyInputStreamToFile(part.getInputStream(), file);
                 try (FileOutputStream fos = new FileOutputStream(outFile);
                         BufferedOutputStream bos = new BufferedOutputStream(fos)) {
                     // エントリの出力
-                    int i;
-                    while ((i = bis.read()) != -1) {
-                        bos.write(i);
-                    }
+                    IOUtils.copy(bis, bos);
                 }
             }
         }
