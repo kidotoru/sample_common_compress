@@ -47,7 +47,7 @@ public class TarUtilTest {
         String baseDir = "./in/01/";
         String outputFile = "./out/01/test.tar";
         TarUtil instance = new TarUtil();
-        instance.archive(baseDir, outputFile);
+        instance.archiveFromDir(baseDir, null, outputFile, true);
     }
 
 
@@ -61,7 +61,7 @@ public class TarUtilTest {
         String[] inputFiles = {"file1", "file2", "dir/file3"};
         String outputFile = "./out/02/test.tar";
         TarUtil instance = new TarUtil();
-        instance.archive(baseDir, inputFiles, outputFile);
+        instance.archiveFromFiles(baseDir, inputFiles, outputFile);
     }
 
     /**

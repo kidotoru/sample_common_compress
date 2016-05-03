@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -17,10 +16,20 @@ import org.apache.commons.io.IOUtils;
 
 public class TarUtil {
 
-    // 指定したディレクトリ内のファイルをアーカイブ
-    public void archive(String baseDir, String outputFile) throws FileNotFoundException, IOException {
+    // ArchiveStreamFactoryを使うとzip等もいける？
+    
+    /**
+     * 指定したディレクトリ内のファイルをtarにアーカイブ。
+     * @param baseDir 指定のディレクトリ
+     * @param targetExtensions 対象の拡張子。{"txt", "html"}のように指定する。すべてのファイルを指定する場合null。
+     * @param outputFile 出力tarファイル名
+     * @param recursive trueの場合、サブディレクトリのファイルも対象となる。
+     * @throws IOException 
+     */
+    public void archiveFromDir(String baseDir, String[] targetExtensions,
+            String outputFile, boolean recursive) throws IOException {
         // baseDir内のファイル一覧を取得
-        Collection<File> listFiles = FileUtils.listFiles(new File(baseDir), null, true);
+        Collection<File> listFiles = FileUtils.listFiles(new File(baseDir), targetExtensions, recursive);
         String[] inputFiles = listFiles.stream().map(t -> {
             String p = t.getPath();
             return p.substring(baseDir.length(), p.length());
@@ -28,11 +37,17 @@ public class TarUtil {
             return new String[count];
         });
 
-        this.archive(baseDir, inputFiles, outputFile);
+        this.archiveFromFiles(baseDir, inputFiles, outputFile);
     }
 
-    //作成
-    public void archive(String baseDir, String[] inputFiles, String outputFile) throws FileNotFoundException, IOException {
+    /**
+     * 指定したファイルをtarにアーカイブ
+     * @param baseDir 指定のディレクトリ
+     * @param inputFiles アーカイブするファイル
+     * @param outputFile 出力tarファイル名
+     * @throws IOException 
+     */
+    public void archiveFromFiles(String baseDir, String[] inputFiles, String outputFile) throws IOException {
         try (TarArchiveOutputStream out = new TarArchiveOutputStream(new FileOutputStream(outputFile))) {
             for (String inputFile : inputFiles) {
                 File f = new File(baseDir + inputFile);
@@ -43,8 +58,13 @@ public class TarUtil {
         }
     }
 
-    //展開
-    public void extract(String inputFile, String outputDir) throws FileNotFoundException, IOException {
+    /**
+     * 指定したtarファイルを展開
+     * @param inputFile 展開するtarファイル
+     * @param outputDir 出力ディレクトリ
+     * @throws IOException 
+     */
+    public void extract(String inputFile, String outputDir) throws IOException {
         try (TarArchiveInputStream is = new TarArchiveInputStream(new FileInputStream(inputFile));
                 BufferedInputStream bis = new BufferedInputStream(is)) {
             ArchiveEntry entry;
